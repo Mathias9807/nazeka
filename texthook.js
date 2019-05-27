@@ -1883,6 +1883,13 @@ function update(event)
         }
     }
     
+    // don't lookup numbers
+    if (/\d/.test(textNode.textContent[0]))
+    {
+        lookup_cancel();
+        return;
+    }
+
     // if there was text, use it
     let elemental = acceptable_element(textNode);
     if (textNode && (textNode.nodeType == 3 || elemental))
