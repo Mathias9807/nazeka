@@ -1926,11 +1926,26 @@ function update(event)
         lookup_cancel();
 }
 
+var touchBeginX = 0, touchBeginY = 0;
 function update_touch(event)
 {
     if(event.touches)
     {
-        update(event.touches[0]);
+        let tbX = event.touches[0].screenX;
+        let tbY = event.touches[0].screenY;
+        if(event.type === "touchstart")
+        {
+            touchBeginX = tbX;
+            touchBeginY = tbY;
+            lookup_cancel();
+        }
+        else if(event.type === "touchend")
+        {
+            let diff = Math.abs(touchBeginX - tbX) + Math.abs(touchBeginY - tbY);
+
+            if (diff < 4)
+                update(event.touches[0]);
+        }
     }
 }
 
@@ -2323,6 +2338,7 @@ window.addEventListener("mousemove", update);
 window.addEventListener("keydown", keytest);
 window.addEventListener("keyup", keyuntest);
 get_doc().addEventListener("touchstart", update_touch);
+get_doc().addEventListener("touchend", update_touch);
 
 console.log("inited content script");
 console.log("inited at: " + get_doc().URL);
